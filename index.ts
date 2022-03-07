@@ -25,7 +25,7 @@ if (!tx.shell) {
 
 const psTree = promisify(psTreeModule)
 
-export function $(template: TemplateStringsArray, ...args: any[]): ProcessOutput {
+export function $(template: TemplateStringsArray, ...args: any[]): string {
   let __from = (new Error().stack!.split(/^\s*at\s/m)[2]).trim()
   let cmd = template[0], i = 0
   while (i < args.length) {
@@ -59,16 +59,15 @@ export function $(template: TemplateStringsArray, ...args: any[]): ProcessOutput
   if (ret.signal !== null) {
     message += `\n    signal: ${ret.signal}`
   }
-  let output = new ProcessOutput({
-    exitCode: code,
-    stdout: ret.stdout,
-    stderr: ret.stderr,
-    message: message,
-  });
-  if (output.exitCode !== 0) {
-    throw output;
+  if (code !== 0) {
+    throw new ProcessOutput({
+      exitCode: code,
+      stdout: ret.stdout,
+      stderr: ret.stderr,
+      message: message,
+    });
   }
-  return output;
+  return ret.stdout;
 }
 
 export function $async(pieces: TemplateStringsArray, ...args: any[]): ProcessPromise {
