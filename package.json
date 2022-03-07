@@ -1,8 +1,9 @@
 {
   "name": "@katlin/tx",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Writing script with typescript",
-  "main": "index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest"
   },

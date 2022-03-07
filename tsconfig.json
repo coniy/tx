@@ -6,6 +6,7 @@
       "dom",
       "esnext"
     ],
+    "outDir": "./dist",
     "declaration": true,
     "declarationMap": true,
     "strict": true,
