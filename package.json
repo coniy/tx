@@ -1,6 +1,6 @@
 {
   "name": "@katlin/tx",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Writing script with typescript",
   "main": "tx.ts",
   "scripts": {
