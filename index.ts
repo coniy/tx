@@ -4,21 +4,20 @@ import {promisify} from "util";
 import chalk from "chalk";
 import psTreeModule from 'ps-tree'
 import {Readable, Writable} from "stream";
-import fs from "fs-extra";
 import nodeFetch, {RequestInit} from 'node-fetch';
 
-export {fs};
-
-export let option = {
+let tx = {
   verbose: true,
   shell: "",
   prefix: "",
 }
 
-if (!option.shell) {
+export default tx;
+
+if (!tx.shell) {
   try {
-    option.shell = which.sync("bash");
-    option.prefix = "set -euo pipefail;";
+    tx.shell = which.sync("bash");
+    tx.prefix = "set -euo pipefail;";
   } catch (e) {
     console.log("bash not found");
   }
@@ -38,9 +37,9 @@ export function $(template: TemplateStringsArray, ...args: any[]): ProcessOutput
     }
     cmd += s + template[++i]
   }
-  let ret = spawnSync(option.prefix + cmd, {
+  let ret = spawnSync(tx.prefix + cmd, {
     cwd: process.cwd(),
-    shell: option.shell ?? true,
+    shell: tx.shell ?? true,
     env: process.env,
     stdio: ["inherit", "pipe", "pipe"],
     windowsHide: true,
@@ -85,13 +84,13 @@ export function $async(pieces: TemplateStringsArray, ...args: any[]): ProcessPro
   promise._run = () => {
     if (promise.child) return; // The _run() called from two places: then() and setTimeout().
     if (promise._prerun) promise._prerun() // In case $1.pipe($2), the $2 returned, and on $2._run() invoke $1._run().
-    if (option.verbose && !promise._quiet) {
+    if (tx.verbose && !promise._quiet) {
       printCmd(cmd)
     }
 
-    let child = spawn(option.prefix + cmd, {
+    let child = spawn(tx.prefix + cmd, {
       cwd: process.cwd(),
-      shell: option.shell ?? true,
+      shell: tx.shell ?? true,
       env: process.env,
       stdio: [promise._inheritStdin ? 'inherit' : 'pipe', 'pipe', 'pipe'],
       windowsHide: true,
@@ -120,14 +119,14 @@ export function $async(pieces: TemplateStringsArray, ...args: any[]): ProcessPro
     if (!promise._piped) {
       // If process is piped, don't collect or print output.
       child.stdout!.on('data', data => {
-        if (option.verbose && !promise._quiet) process.stdout.write(data)
+        if (tx.verbose && !promise._quiet) process.stdout.write(data)
         stdout += data
         combined += data
       })
     }
     child.stderr!.on('data', data => {
       // Stderr should be printed regardless of piping.
-      if (option.verbose && !promise._quiet) process.stderr.write(data)
+      if (tx.verbose && !promise._quiet) process.stderr.write(data)
       stderr += data
       combined += data
     })
@@ -348,7 +347,7 @@ function exitCodeInfo(exitCode: number): string|undefined {
 }
 
 export async function fetch(url: string, init?: RequestInit) {
-  if (option.verbose) {
+  if (tx.verbose) {
     if (typeof init !== 'undefined') {
       console.log('$', colorize(`fetch ${url}`), init)
     } else {
@@ -359,7 +358,7 @@ export async function fetch(url: string, init?: RequestInit) {
 }
 
 export function cd(path: string) {
-  if (option.verbose) console.log('$', colorize(`cd ${path}`))
+  if (tx.verbose) console.log('$', colorize(`cd ${path}`))
   process.chdir(path)
 }
 

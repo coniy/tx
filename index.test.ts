@@ -13,8 +13,9 @@
 // limitations under the License.
 
 import {strict as assert} from 'assert'
-import {$async, cd, fs, option, retryAsync} from "./index";
+import tx,{$async, cd,   retryAsync} from "./index";
 import path from "path";
+import fs from "fs-extra";
 
 describe("tx async", () => {
   test('Only stdout is used during command substitution', async () => {
