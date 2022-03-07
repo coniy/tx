@@ -39,6 +39,9 @@ function $(template, ...args) {
         }
         cmd += s + template[++i];
     }
+    if (tx.verbose) {
+        printCmd(cmd);
+    }
     let ret = (0, child_process_1.spawnSync)(tx.prefix + cmd, {
         cwd: process.cwd(),
         shell: tx.shell ?? true,
@@ -48,6 +51,10 @@ function $(template, ...args) {
         maxBuffer: 200 * 1024 * 1024,
         encoding: "utf8",
     });
+    if (tx.verbose) {
+        process.stdout.write(ret.stdout);
+        process.stderr.write(ret.stderr);
+    }
     let code = ret.status ?? 0;
     let message = `${ret.stderr || '\n'}    at ${__from}`;
     message += `\n    exit code: ${code}${exitCodeInfo(code) ? ' (' + exitCodeInfo(code) + ')' : ''}`;

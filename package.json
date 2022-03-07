@@ -1,11 +1,13 @@
 {
   "name": "@katlin/tx",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Writing script with typescript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
   },
   "bin": {
     "tx": "tx.ts"
