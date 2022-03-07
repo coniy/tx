@@ -209,6 +209,6 @@ describe("tx async", () => {
   test('require() is working in ESM', async () => {
     let data = require('./package.json')
     version = data.version
-    assert.equal(data.name, 'tx')
+    assert.equal(data.name, '@katlin/tx')
   });
 })
