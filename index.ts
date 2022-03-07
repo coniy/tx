@@ -37,6 +37,9 @@ export function $(template: TemplateStringsArray, ...args: any[]): ProcessOutput
     }
     cmd += s + template[++i]
   }
+  if (tx.verbose) {
+    printCmd(cmd)
+  }
   let ret = spawnSync(tx.prefix + cmd, {
     cwd: process.cwd(),
     shell: tx.shell ?? true,
@@ -46,6 +49,10 @@ export function $(template: TemplateStringsArray, ...args: any[]): ProcessOutput
     maxBuffer: 200 * 1024 * 1024, // 200 MiB
     encoding: "utf8",
   })
+  if (tx.verbose) {
+    process.stdout.write(ret.stdout);
+    process.stderr.write(ret.stderr);
+  }
   let code = ret.status ?? 0;
   let message = `${ret.stderr || '\n'}    at ${__from}`
   message += `\n    exit code: ${code}${exitCodeInfo(code) ? ' (' + exitCodeInfo(code) + ')' : ''}`
