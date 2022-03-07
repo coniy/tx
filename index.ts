@@ -44,7 +44,7 @@ export function $(template: TemplateStringsArray, ...args: any[]): string {
     cwd: process.cwd(),
     shell: tx.shell ?? true,
     env: process.env,
-    stdio: "pipe",
+    stdio: ["inherit", "pipe", "pipe"],
     windowsHide: true,
     maxBuffer: 200 * 1024 * 1024, // 200 MiB
     encoding: "utf8",
